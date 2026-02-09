@@ -1,0 +1,30 @@
+import { test, expect } from '@playwright/test';
+
+test('Verify that book now functionality works', async ({ page }) => {
+  await page.goto('https://www.officeone.lk/office-one-kandy/');
+  await page.getByRole('link', { name: 'OUR PACKAGES' }).click();
+  await page.getByRole('link', { name: 'CEO Cabin' }).click();
+  await page.locator('#ceocabin').getByRole('link', { name: 'Book Now' }).click();
+  await expect(page.getByText('Your Workspace Awaits – Book Now Contact FormΔNameEmailOffice One Center Kandy')).toBeVisible();
+  await page.getByRole('button', { name: 'Close' }).click();
+  await page.getByRole('link', { name: 'Manager Cabin' }).click();
+  await page.locator('#ManagerCabin').getByRole('link', { name: 'Book Now' }).click();
+  await expect(page.getByText('Your Workspace Awaits – Book Now Contact FormΔNameEmailOffice One Center Kandy')).toBeVisible();
+  await page.getByRole('button', { name: 'Close' }).click();
+  await page.getByRole('link', { name: 'Conference Room' }).click();
+  await page.locator('#Conferenceroom').getByRole('link', { name: 'Book Now' }).click();
+  await expect(page.getByText('Your Workspace Awaits – Book Now Contact FormΔNameEmailOffice One Center Kandy')).toBeVisible();
+  await page.getByRole('button', { name: 'Close' }).click();
+  await page.getByRole('link', { name: 'Full Focus Hot Desk' }).click();
+  await page.locator('[id="FullFocusHot Desk"]').getByRole('link', { name: 'Book Now' }).click();
+  await expect(page.getByText('Your Workspace Awaits – Book Now Contact FormΔNameEmailOffice One Center Kandy')).toBeVisible();
+  await page.getByRole('button', { name: 'Close' }).click();
+  await page.getByRole('link', { name: 'Daylong Dedication Hot Desk' }).click();
+  await page.locator('[id="Daylong DedicationHotDesk"]').getByRole('link', { name: 'Book Now' }).click();
+  await page.getByText('Your Workspace Awaits – Book Now Contact FormΔNameEmailOffice One Center Kandy').click();
+  await expect(page.getByText('Your Workspace Awaits – Book Now Contact FormΔNameEmailOffice One Center Kandy')).toBeVisible();
+  await page.getByRole('button', { name: 'Close' }).click();
+  await page.getByRole('link', { name: 'Hourly Harmony Hot Desk' }).click();
+  await page.locator('#HourlyHarmonyHotDesk').getByRole('link', { name: 'Book Now' }).click();
+  await expect(page.getByText('Your Workspace Awaits – Book Now Contact FormΔNameEmailOffice One Center Kandy')).toBeVisible();
+});
