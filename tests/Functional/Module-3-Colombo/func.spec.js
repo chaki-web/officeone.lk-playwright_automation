@@ -91,7 +91,8 @@ test.describe('Module 3 - Colombo', () => {
     await expect(page.getByText('Our Happy Clients!')).toBeVisible();
   });
 
-  test.only('Verify reviewes can Expand or Shrink', async({ page }) => {
+  //without tester letting the locator identify the component its not passing!!!
+  test('Verify reviewes can Expand or Shrink', async({ page }) => {
     await page.goto('https://www.officeone.lk/office-one-colombo/');
     await page.getByText('shehan athapattu 2025-02-10 Trustindex verifies that the original source of the').click();
     await page.getByText('Crystal 2024-12-06 Trustindex').click();
@@ -100,4 +101,76 @@ test.describe('Module 3 - Colombo', () => {
     await expect(page.getByText('Crystal 2024-12-06 Trustindex')).toBeVisible();
     await page.locator('span').filter({ hasText: 'Hide' }).first().click();
   });
+
+  test('Footer link functionality', async ({ page }) => {
+    await page.goto('https://www.officeone.lk/office-one-colombo/');
+    await page.locator('#menu-item-2916').getByRole('link', { name: 'Office One Colombo' }).click();
+    await expect(page.getByRole('heading', { name: 'OFFICEONE COLOMBO' })).toBeVisible();
+    await page.locator('#colophon').getByRole('link', { name: 'Home' }).click();
+    await expect(page.getByRole('heading', { name: 'WELCOME TO OFFICE ONE' })).toBeVisible();
+    await page.locator('#colophon').getByRole('link', { name: 'Office One Kandy' }).click();
+    await expect(page.getByRole('heading', { name: 'OFFICE ONE KANDY', exact: true })).toBeVisible();
+    await page.goto('https://www.officeone.lk/office-one-colombo/');
+    await page.locator('#colophon').getByRole('link', { name: 'Office One Colombo' }).click();
+    await expect(page.getByRole('heading', { name: 'OFFICEONE COLOMBO' })).toBeVisible();
+  });
+
+  test('Book Now box and map section should be visible', async ({ page }) => {
+    await page.goto('https://officeone.lk/office-one-colombo/', { waitUntil: 'domcontentloaded' });
+
+    // Scroll to the bottom of the page first (ensures footer content loads)
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+
+    // --- Book Now box ---
+    const bookNowBox = page.getByRole('heading', { name: 'Send us a message' });
+    await bookNowBox.waitFor({ state: 'visible' });
+    await expect(bookNowBox).toBeVisible();
+
+    // --- Map section text ---
+    const findUsText = page.getByText('Find Us', { exact: true });
+    await findUsText.scrollIntoViewIfNeeded();
+    await findUsText.waitFor({ state: 'visible' });
+    await expect(findUsText).toBeVisible();
+  });
+
+  test('Verify book now form loads correctly', async ({ page }) => {
+    await page.goto('https://officeone.lk/office-one-colombo/');
+    await page.locator('#HotDesk').getByRole('link', { name: 'Book Now' }).click();
+    await expect(page.getByText('Your Workspace Awaits')).toBeVisible();
+    await page.getByRole('button', { name: 'Close' }).click();
+    await page.locator('#SingleCabin').getByRole('link', { name: 'Book Now' }).click();
+    await expect(page.getByText('Your Workspace Awaits')).toBeVisible();
+    await page.getByRole('button', { name: 'Close' }).click();
+    await page.locator('#MeetingRoom').getByRole('link', { name: 'Book Now' }).click();
+    await expect(page.getByText('Your Workspace Awaits')).toBeVisible();
+    await page.getByRole('button', { name: 'Close' }).click();
+  });
+
+  test('Verify book now form validation with empty fields', async ({ page }) => {
+    await page.goto('https://officeone.lk/office-one-kandy/');
+    await page.locator('#ceocabin').getByRole('link', { name: 'Book Now' }).click();
+    await page.getByRole('button', { name: 'Book Now' }).click();
+    await expect(page.getByText('This field is required').first()).toBeVisible();
+    await expect(page.locator('div').filter({ hasText: /^EmailThis field is required$/ }).getByRole('alert')).toBeVisible();
+    await expect(page.locator('div').filter({ hasText: /^Office One Center Kandy ColomboThis field is required$/ }).getByRole('alert')).toBeVisible();
+    await expect(page.locator('div').filter({ hasText: /^SubjectThis field is required$/ }).getByRole('alert')).toBeVisible();
+    await expect(page.locator('div').filter({ hasText: /^MessageThis field is required$/ }).getByRole('alert')).toBeVisible();
+  });
+
+  test.only('Verify book now form validation with empty name field', async ({ page }) => {
+    await page.goto('https://officeone.lk/office-one-colombo/');
+    await page.locator('#HotDesk').getByRole('link', { name: 'Book Now' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('sufferunicontact@gmail.com');
+    await page.getByRole('radio', { name: 'Colombo' }).check();
+    await page.locator('#ff_5_dropdown_1').selectOption({ label: 'Hot Desk - Daily Package ( Rs.1,500.00 )' });
+    await page.getByRole('textbox', { name: 'Subject' }).click();
+    await page.getByRole('textbox', { name: 'Subject' }).fill('test');
+    await page.getByRole('textbox', { name: 'Message' }).click();
+    await page.getByRole('textbox', { name: 'Message' }).fill('test');
+    await page.getByRole('button', { name: 'Book Now' }).click();
+    await expect(page.getByText('This field is required')).toBeVisible();
+  });
+
+
 })
