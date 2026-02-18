@@ -81,9 +81,23 @@ test.describe('Module 3 - Colombo', () => {
     await page.getByRole('button', { name: 'Close' }).click();
   });
 
-  test.only('Verify Gallery section successfuly loads', async ({ page }) => {
+  test('Verify Gallery section successfuly loads', async ({ page }) => {
     await page.goto('https://www.officeone.lk/office-one-colombo/');
     await expect(page.locator('div').filter({ hasText: 'Explore Our Gallery' }).first()).toBeVisible();
   });
-  
-});
+
+  test('Verify Reviews are visible ', async ({ page }) => {
+    await page.goto('https://officeone.lk/office-one-colombo/');
+    await expect(page.getByText('Our Happy Clients!')).toBeVisible();
+  });
+
+  test.only('Verify reviewes can Expand or Shrink', async({ page }) => {
+    await page.goto('https://www.officeone.lk/office-one-colombo/');
+    await page.getByText('shehan athapattu 2025-02-10 Trustindex verifies that the original source of the').click();
+    await page.getByText('Crystal 2024-12-06 Trustindex').click();
+    await expect(page.getByText('Crystal 2024-12-06 Trustindex')).toBeVisible();
+    await page.getByRole('button', { name: 'Read more' }).nth(1).click();
+    await expect(page.getByText('Crystal 2024-12-06 Trustindex')).toBeVisible();
+    await page.locator('span').filter({ hasText: 'Hide' }).first().click();
+  });
+})
