@@ -57,4 +57,33 @@ test.describe('Module 3 - Colombo', () => {
       await expect(link).toContainText(pkg.name);
     }
   });
+
+  test('Verify that book now functionality works', async ({ page }) => {
+    await page.goto('https://www.officeone.lk/office-one-colombo/');
+    await page.getByRole('link', { name: 'OUR PACKAGES' }).click();
+
+    // Hot Desk - Book Now
+    await page.getByRole('link', { name: 'Hot Desk' }).first().click();
+    await page.locator('#HotDesk').getByRole('link', { name: 'Book Now' }).click();
+    await expect(page.getByText('Your Workspace Awaits')).toBeVisible();
+    await page.getByRole('button', { name: 'Close' }).click();
+
+    // Single Cabin - Book Now
+    await page.getByRole('link', { name: 'Single Cabin' }).first().click();
+    await page.locator('#SingleCabin').getByRole('link', { name: 'Book Now' }).click();
+    await expect(page.getByText('Your Workspace Awaits')).toBeVisible();
+    await page.getByRole('button', { name: 'Close' }).click();
+
+    // Meeting Room - Book Now
+    await page.getByRole('link', { name: 'Meeting Room' }).first().click();
+    await page.locator('#MeetingRoom').getByRole('link', { name: 'Book Now' }).click();
+    await expect(page.getByText('Your Workspace Awaits')).toBeVisible();
+    await page.getByRole('button', { name: 'Close' }).click();
+  });
+
+  test.only('Verify Gallery section successfuly loads', async ({ page }) => {
+    await page.goto('https://www.officeone.lk/office-one-colombo/');
+    await expect(page.locator('div').filter({ hasText: 'Explore Our Gallery' }).first()).toBeVisible();
+  });
+  
 });
