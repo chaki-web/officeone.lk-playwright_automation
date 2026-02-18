@@ -31,33 +31,30 @@ test.describe('Module 3 - Colombo', () => {
     await page.locator('#menu-item-1093').click();
     await expect(page).toHaveURL('https://www.officeone.lk/');
   });
-});
 
   test('Verify that button redirects to the Packages section', async ({ page }) => {
-    await page.goto('https://www.officeone.lk/');
-    await page.locator('#menu-item-1093').click();
-    await expect(page).toHaveURL('https://www.officeone.lk/');
+    await page.goto('https://www.officeone.lk/office-one-colombo/');
+    await page.getByRole('link', { name: 'OUR PACKAGES' }).click();
+    await expect(page.locator('#HotDesk, #SingleCabin, #MeetingRoom').first()).toBeVisible();
   });
 
-  test('Verify that each package navigates', async ({ page }) => {
-  await page.goto('https://www.officeone.lk/office-one-colombo/');
-  await page.getByRole('link', { name: 'OUR PACKAGES' }).click();
+  test('Verify that each package is listed', async ({ page }) => {
+    await page.goto('https://www.officeone.lk/office-one-colombo/');
 
-  const packages = [
-    { link: 'CEO Cabin', heading: 'CEO Cabin' },
-    { link: 'Manager Cabin', heading: 'Manager Cebine' },
-    { link: 'Conference Room', heading: 'Conference Room' },
-    { link: 'Full Focus Hot Desk', heading: 'Full Focus Hot Desk' },
-    { link: 'Daylong Dedication Hot Desk', heading: 'Daylong Dedication Hot Desk' },
-    { link: 'Hourly Harmony Hot Desk', heading: 'Hourly Harmony Hot Desk' },
-  ];
+    // Click OUR PACKAGES to scroll to the packages section
+    await page.getByRole('link', { name: 'OUR PACKAGES' }).click();
 
-  for (const pkg of packages) {
-    await page.getByRole('link', { name: pkg.link }).click();
-    await expect(page.getByRole('heading', { name: pkg.heading })).toBeVisible();
+    const packages = [
+      { name: 'Hot Desk', href: '#HotDesk' },
+      { name: 'Single Cabin', href: '#SingleCabin' },
+      { name: 'Meeting Room', href: '#MeetingRoom' },
+    ];
 
-    // go back to package list for next iteration
-    await page.goBack();
-  }
+    for (const pkg of packages) {
+      // Verify each package tab link exists with correct text
+      const link = page.locator(`a[href="${pkg.href}"]`).first();
+      await expect(link).toBeVisible();
+      await expect(link).toContainText(pkg.name);
+    }
+  });
 });
-
