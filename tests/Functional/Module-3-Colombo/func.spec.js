@@ -38,3 +38,26 @@ test.describe('Module 3 - Colombo', () => {
     await page.locator('#menu-item-1093').click();
     await expect(page).toHaveURL('https://www.officeone.lk/');
   });
+
+  test('Verify that each package navigates', async ({ page }) => {
+  await page.goto('https://www.officeone.lk/office-one-colombo/');
+  await page.getByRole('link', { name: 'OUR PACKAGES' }).click();
+
+  const packages = [
+    { link: 'CEO Cabin', heading: 'CEO Cabin' },
+    { link: 'Manager Cabin', heading: 'Manager Cebine' },
+    { link: 'Conference Room', heading: 'Conference Room' },
+    { link: 'Full Focus Hot Desk', heading: 'Full Focus Hot Desk' },
+    { link: 'Daylong Dedication Hot Desk', heading: 'Daylong Dedication Hot Desk' },
+    { link: 'Hourly Harmony Hot Desk', heading: 'Hourly Harmony Hot Desk' },
+  ];
+
+  for (const pkg of packages) {
+    await page.getByRole('link', { name: pkg.link }).click();
+    await expect(page.getByRole('heading', { name: pkg.heading })).toBeVisible();
+
+    // go back to package list for next iteration
+    await page.goBack();
+  }
+});
+

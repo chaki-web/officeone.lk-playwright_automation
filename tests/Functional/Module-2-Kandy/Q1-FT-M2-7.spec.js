@@ -16,3 +16,4 @@ test('Verify that each package navigates ', async ({ page }) => {
   await page.getByRole('link', { name: 'Hourly Harmony Hot Desk' }).click();
   await page.getByRole('heading', { name: 'Hourly Harmony Hot Desk' }).click();
 });
+
