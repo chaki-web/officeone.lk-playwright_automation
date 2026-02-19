@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test', async ({ page }) => {
+test('Verify book now form validation with radio button not selected', async ({ page }) => {
   await page.goto('https://officeone.lk/office-one-kandy/');
   await page.locator('#ceocabin').getByRole('link', { name: 'Book Now' }).click();
   await page.getByRole('textbox', { name: 'Name *' }).click();

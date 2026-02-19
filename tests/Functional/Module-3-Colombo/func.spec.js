@@ -163,7 +163,15 @@ test.describe('Module 3 - Colombo', () => {
     await page.getByRole('textbox', { name: 'Email' }).click();
     await page.getByRole('textbox', { name: 'Email' }).fill('sufferunicontact@gmail.com');
     await page.getByRole('radio', { name: 'Colombo' }).check();
-    await page.locator('#ff_5_dropdown_1').selectOption({ label: 'Hot Desk - Daily Package ( Rs.1,500.00 )' });
+    // Wait for the dropdown to be ready, then select the Hot Desk Daily option
+    const dropdown = page.locator('#ff_5_dropdown_1');
+    await dropdown.waitFor({ state: 'visible' });
+    // Log available options for debugging
+    const options = await dropdown.locator('option').allTextContents();
+    console.log('Available dropdown options:', options);
+    // Select the option containing "Hot Desk" and "Daily"
+    const hotDeskOption = await dropdown.locator('option').filter({ hasText: 'Hot Desk' }).filter({ hasText: 'Daily' }).getAttribute('value');
+    await dropdown.selectOption(hotDeskOption);
     await page.getByRole('textbox', { name: 'Subject' }).click();
     await page.getByRole('textbox', { name: 'Subject' }).fill('test');
     await page.getByRole('textbox', { name: 'Message' }).click();
@@ -171,6 +179,19 @@ test.describe('Module 3 - Colombo', () => {
     await page.getByRole('button', { name: 'Book Now' }).click();
     await expect(page.getByText('This field is required')).toBeVisible();
   });
-
-
+  
+  test('Verify book now form validation with radio button not selected', async ({ page }) => {
+    await page.goto('https://officeone.lk/office-one-colombo/');
+    await page.locator('#HotDesk').getByRole('link', { name: 'Book Now' }).click();
+    await page.getByRole('textbox', { name: 'Name *' }).click();
+    await page.getByRole('textbox', { name: 'Name *' }).fill('testone');
+    await page.getByRole('textbox', { name: 'Email' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('sufferunicontact@gmail.com');
+    await page.getByRole('textbox', { name: 'Subject' }).click();
+    await page.getByRole('textbox', { name: 'Subject' }).fill('test');
+    await page.getByRole('textbox', { name: 'Message' }).click();
+    await page.getByRole('textbox', { name: 'Message' }).fill('test');
+    await page.getByRole('button', { name: 'Book Now' }).click();
+    await expect(page.getByText('This field is required')).toBeVisible();
+  });
 })

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test', async ({ page }) => {
+test('Verify book now form validation with empty message field', async ({ page }) => {
   await page.goto('https://www.officeone.lk/office-one-kandy/');
   await page.locator('#ceocabin').getByRole('link', { name: 'Book Now' }).click();
   await page.getByRole('textbox', { name: 'Name *' }).click();
