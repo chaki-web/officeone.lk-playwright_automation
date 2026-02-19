@@ -157,7 +157,7 @@ test.describe('Module 3 - Colombo', () => {
     await expect(page.locator('div').filter({ hasText: /^MessageThis field is required$/ }).getByRole('alert')).toBeVisible();
   });
 
-  test.only('Verify book now form validation with empty name field', async ({ page }) => {
+  test('Verify book now form validation with empty name field', async ({ page }) => {
     await page.goto('https://officeone.lk/office-one-colombo/');
     await page.locator('#HotDesk').getByRole('link', { name: 'Book Now' }).click();
     await page.getByRole('textbox', { name: 'Email' }).click();
@@ -193,5 +193,57 @@ test.describe('Module 3 - Colombo', () => {
     await page.getByRole('textbox', { name: 'Message' }).fill('test');
     await page.getByRole('button', { name: 'Book Now' }).click();
     await expect(page.getByText('This field is required')).toBeVisible();
+  });
+
+  test('Verify book now form validation with empty package field', async ({ page }) => {
+    await page.goto('https://www.officeone.lk/office-one-colombo/');
+    await page.locator('#HotDesk').getByRole('link', { name: 'Book Now' }).click();
+    await page.getByRole('textbox', { name: 'Name *' }).click();
+    await page.getByRole('textbox', { name: 'Name *' }).fill('testone');
+    await page.getByRole('textbox', { name: 'Email' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('sufferunicontact@gmail.com');
+    await page.getByRole('radio', { name: 'Kandy' }).check();
+    await page.getByRole('textbox', { name: 'Subject' }).click();
+    await page.getByRole('textbox', { name: 'Subject' }).fill('test');
+    await page.getByRole('textbox', { name: 'Message' }).click();
+    await page.getByRole('textbox', { name: 'Message' }).fill('test');
+    await page.getByRole('button', { name: 'Book Now' }).click();
+    await expect(page.getByLabel('Your Workspace Awaits – Book').getByText('Packages- Select -Hot Desk')).toBeVisible();
+  });
+
+  test('Verify book now form validation with empty message field', async ({ page }) => {
+    await page.goto('https://www.officeone.lk/office-one-kandy/');
+    await page.locator('#ceocabin').getByRole('link', { name: 'Book Now' }).click();
+    await page.getByRole('textbox', { name: 'Name *' }).click();
+    await page.getByRole('textbox', { name: 'Name *' }).fill('testone');
+    await page.getByRole('textbox', { name: 'Email' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('sufferunicontact@gmail.com');
+    await page.getByRole('radio', { name: 'Kandy' }).check();
+    await page.locator('#ff_5_dropdown').selectOption('CEO Cabin - 3,500.00 ( 1 Hour )');
+    await page.getByRole('textbox', { name: 'Subject' }).click();
+    await page.getByRole('textbox', { name: 'Subject' }).fill('test');
+    await page.getByRole('button', { name: 'Book Now' }).click();
+    await expect(page.getByText('MessageThis field is required')).toBeVisible();
+  });
+
+  test.only('Verify successful submission', async ({ page }) => {
+    await page.goto('https://www.officeone.lk/office-one-colombo/');
+    await page.locator('#HotDesk').getByRole('link', { name: 'Book Now' }).click();
+    await page.getByRole('textbox', { name: 'Name *' }).click();
+    await page.getByRole('textbox', { name: 'Name *' }).fill('testone');
+    await page.getByRole('textbox', { name: 'Email' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('sufferunicontact@gmail.com');
+    await page.getByRole('radio', { name: 'Colombo' }).check();
+    const dropdown = page.locator('#ff_5_dropdown_1');
+    await dropdown.waitFor({ state: 'visible' });
+    const options = await dropdown.locator('option').allTextContents();
+    console.log('Available dropdown options:', options);
+    const hotDeskOption = await dropdown.locator('option').filter({ hasText: 'Hot Desk' }).filter({ hasText: 'Daily' }).getAttribute('value');
+    await dropdown.selectOption(hotDeskOption);
+    await page.getByRole('textbox', { name: 'Subject' }).click();
+    await page.getByRole('textbox', { name: 'Subject' }).fill('test');
+    await page.getByRole('textbox', { name: 'Message' }).click();
+    await page.getByRole('textbox', { name: 'Message' }).fill('test');
+    await page.getByRole('button', { name: 'Book Now' }).click();
   });
 })
