@@ -14,7 +14,7 @@ test.describe('Module 3 - Colombo', () => {
     ).toBeVisible();
   });
 
-  test('Navigate to Office One Kandy and verify heading', async ({ page }) => {
+  test.only('Navigate to Office One Kandy and verify heading', async ({ page }) => {
   await page.goto('https://www.officeone.lk/');
 
   // Click using ID (best practice)
@@ -226,7 +226,7 @@ test.describe('Module 3 - Colombo', () => {
     await expect(page.getByText('MessageThis field is required')).toBeVisible();
   });
 
-  test.only('Verify successful submission', async ({ page }) => {
+  test('Verify successful submission', async ({ page }) => {
     await page.goto('https://www.officeone.lk/office-one-colombo/');
     await page.locator('#HotDesk').getByRole('link', { name: 'Book Now' }).click();
     await page.getByRole('textbox', { name: 'Name *' }).click();
